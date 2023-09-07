@@ -1,2 +1,1 @@
-from calculator import *
-from stack_handler import *
+from .calculator import *

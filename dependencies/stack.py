@@ -6,7 +6,7 @@ class stack():
     self._count = 0
     
   def push(self, data) -> None:
-    self._stack_array.insert(1, data)
+    self._stack_array.insert(0, data)
     self._count += 1
     
   def pop(self) -> Any | None:
