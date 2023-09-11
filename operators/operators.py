@@ -4,6 +4,10 @@ class Operators(ABC):
   def __init__(self) -> None:
     pass
   
-  @abstractmethod()
-  def execute(first: float, second: float) -> float:
+  @abstractmethod
+  def execute(self, first: float, second: float) -> float:
+    pass
+  
+  @abstractmethod
+  def get_priority(self) -> int:
     pass
