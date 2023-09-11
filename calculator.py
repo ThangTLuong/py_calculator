@@ -46,11 +46,28 @@ class calculator():
     self._list_of_valid_args = list_of_valid_args
     return list_of_valid_args
     
-  def is_number(self, value) -> float | None:
+  def is_number(self, value) -> bool:
     try:
-      return float(value)
+      float(value)
+      return True
     except ValueError:
-      return
+      return False
+    
+  def is_whole_number(self, value) -> bool:
+    whole_value: int = int(value)
+    
+    return value == whole_value
+    
+  def execute(self) -> None:
+    # get the previous operator and the two previous operand
+    # then execute the equation
+    # finally, push the result back into the operand stack
+    operator: op = self._di.get(self._sh.operator_pop())
+    second: float = self._sh.operand_pop()
+    first: float = self._sh.operand_pop()
+    
+    result: float = operator.execute(first, second)
+    self._sh.operand_push(result)
     
   def start(self) -> None:
     # Separate operators and operands
@@ -63,24 +80,21 @@ class calculator():
     for arg in self._list_of_valid_args:
       if not self._sh.operator_peek() == None and arg in self._operators:
         if self._di.get(arg).get_priority() < self._di.get(self._sh.operator_peek()).get_priority():
-          # get the previous operator and the two previous operand
-          # then execute the equation
-          # finally, push the result back into the operand stack
-          operator: op = self._di.get(self._sh.operator_pop())
-          second: float = float(self._sh.operand_pop())
-          first: float = float(self._sh.operand_pop())
-          
-          result: float = operator.execute(first, second)
-          self._sh.operand_push(str(result))
+          self.execute()
       
       if self.is_number(arg):
-        self._sh.operand_push(arg)
+        self._sh.operand_push(float(arg))
       else:
         self._sh.operator_push(arg)
+    
+    while not self._sh.operator_peek() == None:    
+      self.execute()
         
   def get_result(self) -> float:
-    return self._sh.operand_pop()
-      
+    if self.is_whole_number(self._sh.operand_peek()):
+      return int(self._sh.operand_pop())
+    else:
+      return float(self._sh.operand_pop())
 
 def main(args=None):
   if args == None:
